@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/permissionFragment">
+
+    <fragment
+        android:id="@+id/cameraFragment"
+        android:name="com.example.democamerax.fragments.CameraFragment"
+        android:label="CameraFragment"
+        app:popUpToInclusive="true">
+        <action
+            android:id="@+id/action_cameraFragment_to_galleryFragment"
+            app:destination="@id/galleryFragment" />
+        <argument
+            android:name="captureType"
+            android:defaultValue='"capture"'
+            app:argType="string" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/galleryFragment"
+        android:name="com.example.democamerax.fragments.GalleryFragment"
+        android:label="GalleryFragment"
+        app:popUpToInclusive="true">
+        <action
+            android:id="@+id/action_galleryFragment_to_cameraFragment"
+            app:destination="@id/cameraFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/permissionFragment"
+        android:name="com.example.democamerax.fragments.PermissionFragment"
+        android:label="PermissionFragment">
+        <action
+            android:id="@+id/action_permissionFragment_to_splashFragment"
+            app:destination="@id/splashFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/splashFragment"
+        android:name="com.example.democamerax.fragments.SplashFragment"
+        android:label="SplashFragment">
+        <action
+            android:id="@+id/action_splashFragment_to_cameraFragment"
+            app:destination="@id/cameraFragment" />
+    </fragment>
+
+</navigation>
