@@ -1,4 +1,4 @@
-package com.example.democamerax.fragments
+package com.example.democamerax.ui.fragments
 
 import android.Manifest
 import android.content.pm.PackageManager
@@ -8,7 +8,7 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.NavOptions
 import androidx.navigation.Navigation
 import com.example.democamerax.R
-import com.example.democamerax.extensions.ViewUtils.toast
+import com.example.democamerax.utils.ViewUtils.toast
 
 /**
  * @author Dat Bui T. on 2019-05-16.

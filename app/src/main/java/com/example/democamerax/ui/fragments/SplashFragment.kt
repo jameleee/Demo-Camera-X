@@ -1,4 +1,4 @@
-package com.example.democamerax.fragments
+package com.example.democamerax.ui.fragments
 
 import android.os.Bundle
 import android.view.LayoutInflater

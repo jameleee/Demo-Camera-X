@@ -1,4 +1,4 @@
-package com.example.democamerax.fragments
+package com.example.democamerax.ui.fragments
 
 import android.content.Intent
 import android.os.Build
@@ -14,11 +14,11 @@ import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentStatePagerAdapter
 import com.example.democamerax.BuildConfig
 import com.example.democamerax.R
-import com.example.democamerax.extensions.ViewUtils
+import com.example.democamerax.extensions.isPhotoType
 import com.example.democamerax.extensions.padWithDisplayCutout
 import com.example.democamerax.extensions.showImmersive
-import com.example.democamerax.fragments.CameraFragment.Companion.EXTENSION_WHITELIST
-import com.example.democamerax.fragments.CameraFragment.Companion.KEY_ROOT_DIRECTORY
+import com.example.democamerax.ui.fragments.CameraFragment.Companion.EXTENSION_WHITELIST
+import com.example.democamerax.ui.fragments.CameraFragment.Companion.KEY_ROOT_DIRECTORY
 import kotlinx.android.synthetic.main.fragment_gallery.*
 import java.io.File
 
@@ -130,7 +130,7 @@ class GalleryFragment : Fragment() {
     inner class MediaPagerAdapter(fm: FragmentManager) : FragmentStatePagerAdapter(fm) {
         override fun getCount(): Int = mediaList.size
         override fun getItem(position: Int): Fragment =
-            when (ViewUtils.isPhotoType(mediaList[position])) {
+            when (mediaList[position].isPhotoType()) {
                 false -> VideoFragment.newInstance(mediaList[position])
                 else -> PhotoFragment.newInstance(mediaList[position])
             }

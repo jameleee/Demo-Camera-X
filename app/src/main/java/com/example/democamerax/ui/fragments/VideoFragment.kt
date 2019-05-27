@@ -1,4 +1,4 @@
-package com.example.democamerax.fragments
+package com.example.democamerax.ui.fragments
 
 import android.net.Uri
 import android.os.Bundle
@@ -7,7 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.example.democamerax.R
-import com.example.democamerax.extensions.ViewUtils.toast
+import com.example.democamerax.utils.ViewUtils.toast
 import com.google.android.exoplayer2.*
 import com.google.android.exoplayer2.extractor.DefaultExtractorsFactory
 import com.google.android.exoplayer2.source.ExtractorMediaSource

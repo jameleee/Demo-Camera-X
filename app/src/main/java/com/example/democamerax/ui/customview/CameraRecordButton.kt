@@ -1,4 +1,4 @@
-package com.example.democamerax.customview
+package com.example.democamerax.ui.customview
 
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter

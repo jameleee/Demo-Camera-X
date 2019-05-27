@@ -6,7 +6,7 @@
 
     <fragment
         android:id="@+id/cameraFragment"
-        android:name="com.example.democamerax.fragments.CameraFragment"
+        android:name="com.example.democamerax.ui.fragments.CameraFragment"
         android:label="CameraFragment"
         app:popUpToInclusive="true">
         <action
@@ -20,7 +20,7 @@
 
     <fragment
         android:id="@+id/galleryFragment"
-        android:name="com.example.democamerax.fragments.GalleryFragment"
+        android:name="com.example.democamerax.ui.fragments.GalleryFragment"
         android:label="GalleryFragment"
         app:popUpToInclusive="true">
         <action
@@ -30,7 +30,7 @@
 
     <fragment
         android:id="@+id/permissionFragment"
-        android:name="com.example.democamerax.fragments.PermissionFragment"
+        android:name="com.example.democamerax.ui.fragments.PermissionFragment"
         android:label="PermissionFragment">
         <action
             android:id="@+id/action_permissionFragment_to_splashFragment"
@@ -39,7 +39,7 @@
 
     <fragment
         android:id="@+id/splashFragment"
-        android:name="com.example.democamerax.fragments.SplashFragment"
+        android:name="com.example.democamerax.ui.fragments.SplashFragment"
         android:label="SplashFragment">
         <action
             android:id="@+id/action_splashFragment_to_cameraFragment"
