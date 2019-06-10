@@ -26,8 +26,8 @@ abstract class ImageUtils {
 
             // Apply transformation corresponding to declared EXIF orientation
             when (orientation) {
-                ExifInterface.ORIENTATION_NORMAL -> Unit
-                ExifInterface.ORIENTATION_UNDEFINED -> Unit
+                ExifInterface.ORIENTATION_NORMAL -> matrix.postRotate(0F)
+                ExifInterface.ORIENTATION_UNDEFINED -> matrix.postRotate(0F)
                 ExifInterface.ORIENTATION_ROTATE_90 -> matrix.postRotate(90F)
                 ExifInterface.ORIENTATION_ROTATE_180 -> matrix.postRotate(180F)
                 ExifInterface.ORIENTATION_ROTATE_270 -> matrix.postRotate(270F)
@@ -48,6 +48,17 @@ abstract class ImageUtils {
 
             // Return the resulting matrix
             return matrix
+        }
+
+        /**
+         * This function is using to add exif into image properties
+         * @param fileName: path of file name
+         */
+        fun addExif(fileName: String, degree: Int) {
+            ExifInterface(fileName).run {
+                this.rotate(degree)
+                saveAttributes()
+            }
         }
 
         /**

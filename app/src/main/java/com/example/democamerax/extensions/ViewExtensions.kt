@@ -16,12 +16,14 @@
 
 package com.example.democamerax.extensions
 
+import android.content.Context
 import android.os.Build
 import android.view.DisplayCutout
 import android.view.View
 import android.view.WindowManager
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
+import java.io.File
 
 /** Combination of all flags required to put activity into immersive mode */
 const val FLAGS_FULLSCREEN =
@@ -88,4 +90,14 @@ fun AlertDialog.showImmersive() {
 
     // Set the dialog to focusable again
     window?.clearFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE)
+}
+
+/** Use external media if it is available, our app's file directory otherwise */
+fun Context.getOutputDirectory(): File {
+    val appContext = this.applicationContext
+    val mediaDir = this.externalMediaDirs.firstOrNull()/*?.let {
+            File(it, appContext.resources.getString(R.string.app_name)).apply { mkdirs() }
+        }*/
+    return if (mediaDir != null && mediaDir.exists())
+        mediaDir else appContext.filesDir
 }

@@ -17,8 +17,8 @@ import com.example.democamerax.R
 import com.example.democamerax.extensions.isPhotoType
 import com.example.democamerax.extensions.padWithDisplayCutout
 import com.example.democamerax.extensions.showImmersive
-import com.example.democamerax.ui.fragments.CameraFragment.Companion.EXTENSION_WHITELIST
-import com.example.democamerax.ui.fragments.CameraFragment.Companion.KEY_ROOT_DIRECTORY
+import com.example.democamerax.ui.camera.CameraFragment.Companion.EXTENSION_WHITELIST
+import com.example.democamerax.ui.camera.CameraFragment.Companion.KEY_ROOT_DIRECTORY
 import kotlinx.android.synthetic.main.fragment_gallery.*
 import java.io.File
 
@@ -27,12 +27,6 @@ import java.io.File
  */
 class GalleryFragment : Fragment() {
     private lateinit var mediaList: MutableList<File>
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        // Mark this as a retain fragment, so the lifecycle does not get restarted on config change
-        retainInstance = true
-    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_gallery, container, false)
@@ -49,7 +43,7 @@ class GalleryFragment : Fragment() {
 
             // Populate the ViewPager and implement a cache of two media items
             viewPagerPhoto.apply {
-                offscreenPageLimit = 2
+                offscreenPageLimit = 1
                 adapter = MediaPagerAdapter(childFragmentManager)
             }
         }

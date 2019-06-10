@@ -1,4 +1,4 @@
-package com.example.democamerax.ui.customview
+package com.example.democamerax.widgets
 
 import android.content.Context
 import android.graphics.Canvas

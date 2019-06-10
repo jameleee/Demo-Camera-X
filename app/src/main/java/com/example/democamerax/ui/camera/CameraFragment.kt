@@ -1,4 +1,4 @@
-package com.example.democamerax.ui.fragments
+package com.example.democamerax.ui.camera
 
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
@@ -21,7 +21,6 @@ import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.HandlerThread
-import android.util.DisplayMetrics
 import android.util.Log
 import android.util.Rational
 import android.util.Size
@@ -36,14 +35,12 @@ import com.bumptech.glide.Glide
 import com.example.democamerax.MainActivity.Companion.KEY_EVENT_ACTION
 import com.example.democamerax.MainActivity.Companion.KEY_EVENT_EXTRA
 import com.example.democamerax.R
-import com.example.democamerax.ui.customview.CustomTextureView
-import com.example.democamerax.extensions.ANIMATION_FAST_MILLIS
-import com.example.democamerax.extensions.ANIMATION_SLOW_MILLIS
-import com.example.democamerax.extensions.isPhotoType
-import com.example.democamerax.extensions.singleClick
+import com.example.democamerax.extensions.*
 import com.example.democamerax.interfaces.CaptureListener
+import com.example.democamerax.ui.fragments.SplashFragment
 import com.example.democamerax.utils.*
 import com.example.democamerax.utils.ViewUtils.toast
+import com.example.democamerax.widgets.CustomTextureView
 import kotlinx.android.synthetic.main.fragment_camera.*
 import kotlinx.coroutines.*
 import java.io.File
@@ -54,7 +51,7 @@ import kotlin.coroutines.CoroutineContext
 /**
  * @author Dat Bui T. on 2019-05-16.
  */
-class CameraFragment : Fragment(), CoroutineScope {
+class CameraFragment : Fragment(), RotationListener, CoroutineScope {
 
     companion object {
         const val KEY_ROOT_DIRECTORY = "root_folder"
@@ -69,6 +66,7 @@ class CameraFragment : Fragment(), CoroutineScope {
     private var layoutWidth: Int = 0
     private val job = Job()
     private lateinit var outputDirectory: File
+    private val viewModel = CameraViewModel()
 
     // Volume down button receiver
     private val volumeDownReceiver = object : BroadcastReceiver() {
@@ -89,6 +87,9 @@ class CameraFragment : Fragment(), CoroutineScope {
         super.onCreate(savedInstanceState)
         // Mark this as a retain fragment, so the lifecycle does not get restarted on config change
         retainInstance = true
+        viewModel.registerSensorManager(requireContext())
+
+        viewModel.setRotationListener(this)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -97,7 +98,7 @@ class CameraFragment : Fragment(), CoroutineScope {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        outputDirectory = getOutputDirectory(requireContext())
+        outputDirectory = requireContext().getOutputDirectory()
         layoutWidth = ScreenUtils.getScreenWidth(requireContext())
 
         // Set up the intent filter that will receive events from our main activity
@@ -130,7 +131,20 @@ class CameraFragment : Fragment(), CoroutineScope {
 
     override fun onDestroy() {
         job.cancel()
+        viewModel.unregisterSensorManager(requireContext())
         super.onDestroy()
+    }
+
+    override fun onRotation(startRotation: Int, endRotation: Int) {
+        val animCamera =
+            ObjectAnimator.ofFloat(btnGallery, "rotation", startRotation.toFloat(), endRotation.toFloat())
+        val animSwitch =
+            ObjectAnimator.ofFloat(btnSwitch, "rotation", startRotation.toFloat(), endRotation.toFloat())
+        val set = AnimatorSet()
+        set.playTogether(animCamera, animSwitch)
+        set.duration = 500
+        set.start()
+
     }
 
     private fun initListener() {
@@ -187,8 +201,6 @@ class CameraFragment : Fragment(), CoroutineScope {
             }
             try {
                 // Only bind use cases if we can query a camera with this orientation
-                val xx = CameraX.getCameraWithLensFacing(lensFacing)
-                Log.d("zxc", "kskskskksksksk 000000 $xx")
                 startCamera()
             } catch (exc: Exception) {
                 // Do nothing
@@ -217,9 +229,9 @@ class CameraFragment : Fragment(), CoroutineScope {
         val previewConfig = PreviewConfig.Builder().apply {
             setLensFacing(lensFacing)
 //            setMaxResolution(screenSize)
-            setTargetResolution(screenSize)
+//            setTargetResolution(screenSize)
             // We also provide an aspect ratio in case the exact resolution is not available
-            setTargetAspectRatio(screenAspectRatio)
+//            setTargetAspectRatio(screenAspectRatio)
             setTargetRotation(textureView.display.rotation)
         }.build()
 
@@ -260,13 +272,13 @@ class CameraFragment : Fragment(), CoroutineScope {
                 .apply {
                     setLensFacing(lensFacing)
                     setFlashMode(FlashMode.AUTO)
-                    setTargetResolution(screenSize)
+//                    setTargetResolution(screenSize)
 //                    setMaxResolution(screenSize)
                     setCaptureMode(ImageCapture.CaptureMode.MAX_QUALITY)
                     // We don't set a resolution for image capture; instead, we
                     // select a capture mode which will infer the appropriate
                     // resolution based on aspect ration and requested mode
-                    setTargetAspectRatio(screenAspectRatio)
+//                    setTargetAspectRatio(screenAspectRatio)
                     setTargetRotation(textureView.display.rotation)
                 }.build()
             // Build the image capture use case and attach button click listener
@@ -278,9 +290,9 @@ class CameraFragment : Fragment(), CoroutineScope {
                     setLensFacing(lensFacing)
                     setVideoFrameRate(30)
 //                    setMaxResolution(screenSize)
-                    setTargetResolution(screenSize)
-                    setTargetAspectRatio(screenAspectRatio)
-                    setTargetRotation(textureView.display.rotation)
+//                    setTargetResolution(screenSize)
+//                    setTargetAspectRatio(screenAspectRatio)
+                    setTargetRotation(Surface.ROTATION_90)
                 }.build()
 
             // Build the image capture use case and attach button click listener
@@ -295,7 +307,7 @@ class CameraFragment : Fragment(), CoroutineScope {
             isReversedHorizontal = lensFacing == CameraX.LensFacing.FRONT
         }
 
-        Log.d("zxc ", "spspssp ${textureView.display.rotation}")
+        Log.d("zxc ", "spspssp ${viewModel.getRotationValue()}")
 
         imageCapture?.takePicture(
             file,
@@ -314,6 +326,7 @@ class CameraFragment : Fragment(), CoroutineScope {
                     val msg = "Photo capture succeeded: ${file.absolutePath}"
                     toast(context, msg)
                     Log.d("CameraXApp", msg)
+                    ImageUtils.addExif(file.absolutePath, -viewModel.getRotationValue())
                     handleWhenImageSaved(file)
                 }
             }, metadata
@@ -324,7 +337,6 @@ class CameraFragment : Fragment(), CoroutineScope {
         // Setup image capture metadata
         val metadata = VideoCapture.Metadata()
         // Start recording
-//        if (isRecording)
         videoCapture?.startRecording(
             file,
             object : VideoCapture.OnVideoSavedListener {
@@ -339,16 +351,19 @@ class CameraFragment : Fragment(), CoroutineScope {
                     cause?.printStackTrace()
                 }
 
-                override fun onVideoSaved(file: File?) {
-                    val msg = "Video record succeeded: ${file?.absolutePath}"
-                    toast(context, msg)
+                override fun onVideoSaved(file: File) {
+                    val msg = "Video record succeeded: ${file.absolutePath}"
+                    toast(context, "" + viewModel.getRotationValue().toFloat())
                     Log.d("CameraXApp", msg)
-                    file?.let { handleWhenImageSaved(it) }
+                    /*FFmpeg.execute(
+                        "-i ${file.absolutePath} -metadata:s:v rotate=${viewModel.getRotationValue().toFloat()} -codec copy ${File(
+                            outputDirectory.path, "${System.currentTimeMillis()}.mp4"
+                        )}"
+                    )*/
+                    handleWhenImageSaved(file)
                 }
             }, metadata
         )
-        /* // Stop recording
-         else videoCapture?.stopRecording()*/
     }
 
     private fun setGalleryThumbnail(file: File) {
@@ -406,16 +421,6 @@ class CameraFragment : Fragment(), CoroutineScope {
         // scan them using [MediaScannerConnection]
         val mimeType = MimeTypeMap.getSingleton().getMimeTypeFromExtension(photoFile.extension)
         MediaScannerConnection.scanFile(context, arrayOf(photoFile.absolutePath), arrayOf(mimeType), null)
-    }
-
-    /** Use external media if it is available, our app's file directory otherwise */
-    private fun getOutputDirectory(context: Context): File {
-        val appContext = context.applicationContext
-        val mediaDir = context.externalMediaDirs.firstOrNull()/*?.let {
-            File(it, appContext.resources.getString(R.string.app_name)).apply { mkdirs() }
-        }*/
-        return if (mediaDir != null && mediaDir.exists())
-            mediaDir else appContext.filesDir
     }
 
     private fun handlerFocus(x: Float, y: Float): Boolean {

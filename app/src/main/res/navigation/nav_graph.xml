@@ -6,7 +6,7 @@
 
     <fragment
         android:id="@+id/cameraFragment"
-        android:name="com.example.democamerax.ui.fragments.CameraFragment"
+        android:name="com.example.democamerax.ui.camera.CameraFragment"
         android:label="CameraFragment"
         app:popUpToInclusive="true">
         <action

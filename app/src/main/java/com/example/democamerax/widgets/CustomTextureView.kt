@@ -1,4 +1,4 @@
-package com.example.democamerax.ui.customview
+package com.example.democamerax.widgets
 
 import android.content.Context
 import android.util.AttributeSet
@@ -16,10 +16,8 @@ class CustomTextureView @JvmOverloads constructor(
     private var onCameraEventListener: OnCameraEventListener? = null
     private var isMutiplePoint = false
 
-    override fun onTouchEvent(event: MotionEvent?): Boolean {
-        if (event == null) return true
-
-        when (event.action and MotionEvent.ACTION_MASK) {
+    override fun onTouchEvent(event: MotionEvent): Boolean {
+        when (event.action) {
             MotionEvent.ACTION_DOWN -> {
                 Log.i("zxc", "sss = ${event.pointerCount}")
 
@@ -29,9 +27,17 @@ class CustomTextureView @JvmOverloads constructor(
                     setFocusViewWidthAnimation(event.x, event.y)
                 }
                 if (event.pointerCount == 2) {
+                    isMutiplePoint = true
+                } else isMutiplePoint = false
+            }
+            MotionEvent.ACTION_POINTER_DOWN -> {
+                if (event.pointerCount == 1) {
+                    // Display focus indicator
+                    isMutiplePoint = false
+                }
+                if (event.pointerCount == 2) {
                     Log.i("zxc", "ACTION_DOWN = " + 2)
                     isMutiplePoint = true
-                    setZoomPreView(event)
                 } else isMutiplePoint = false
             }
             MotionEvent.ACTION_MOVE -> {

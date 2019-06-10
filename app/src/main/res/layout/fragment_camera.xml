@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <com.example.democamerax.ui.customview.CustomTextureView
+    <com.example.democamerax.widgets.CustomTextureView
         android:id="@+id/textureView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -31,7 +31,7 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:srcCompat="@drawable/ic_switch" />
 
-    <com.example.democamerax.ui.customview.CameraRecordButton
+    <com.example.democamerax.widgets.CameraRecordButton
         android:id="@+id/btnCapture"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -69,7 +69,7 @@
         app:layout_constraintRight_toRightOf="parent"
         app:srcCompat="@drawable/ic_photo" />
 
-    <com.example.democamerax.ui.customview.FocusView
+    <com.example.democamerax.widgets.FocusView
         android:id="@+id/focusView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -80,7 +80,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <com.example.democamerax.ui.customview.ExampleView
+    <com.example.democamerax.widgets.ExampleView
         android:id="@+id/focus"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -90,7 +90,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <com.example.democamerax.ui.customview.ExampleView
+    <com.example.democamerax.widgets.ExampleView
         android:id="@+id/metering"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
